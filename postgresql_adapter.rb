@@ -338,7 +338,7 @@ module ActiveRecord
       # Quotes PostgreSQL-specific data types for SQL input.
       def quote(value, column = nil) #:nodoc:
         if value.kind_of?(String) && column && column.type == :binary
-          puts "quoted binary"
+          #puts "quoted binary: length #{value.length} after #{escape_bytea(value).length}"
           "#{quoted_string_prefix}'#{escape_bytea(value)}'"
         elsif value.kind_of?(String) && column && column.sql_type =~ /^xml$/
           "xml E'#{quote_string(value)}'"
@@ -493,10 +493,10 @@ module ActiveRecord
 						  end
 						end
 						if unescape_col[j] and value.class.to_s == "System::Byte[]"
-							puts "Convert bytea #{value.class}"
+							#puts "Convert bytea #{value.class} length #{value.length}"
 							#value = unescape_bytea(value.to_s)
-							value = System::Text::ASCIIEncoding.new.GetString(value)
-							#value = System::Text::ASCIIEncoding.new.GetString(value, 0, value.Length)
+							value = String.CreateBinary(value)
+							#puts "new length is #{value.length}"
 						end
 						row << value
 					end
