@@ -488,8 +488,10 @@ module ActiveRecord
 						elsif value.class == System::DBNull
 						 	value = nil
 						elsif value.class == System::Decimal
-							if value.size = 4 #TODO BigDecimal
+							if value.size == 4
 						  	value = Fixnum.induced_from(value)
+						  else
+						  	value = Bignum.induced_from(value)
 						  end
 						end
 						if unescape_col[j] and value.class.to_s == "System::Byte[]"
