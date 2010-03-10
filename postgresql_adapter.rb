@@ -30,6 +30,7 @@ module ActiveRecord
       port     = config[:port] || 5432
       username = config[:username].to_s if config[:username]
       password = config[:password].to_s if config[:password]
+      ssl		   = config[:ssl] || "False"
 
       if config.has_key?(:database)
         database = config[:database]
@@ -39,7 +40,7 @@ module ActiveRecord
 
       # The postgres drivers don't allow the creation of an unconnected PGconn object,
       # so just pass a nil connection object for the time being.
-      ConnectionAdapters::PostgreSQLAdapter.new(nil, logger, [host, port, nil, nil, database, username, password], config)
+      ConnectionAdapters::PostgreSQLAdapter.new(nil, logger, [host, port, nil, nil, database, username, password, ssl], config)
     end
   end
 
@@ -936,7 +937,7 @@ module ActiveRecord
         # connected server's characteristics.
         def connect
           #TODO: Handle encoding if set
-          @connection = Npgsql::NpgsqlConnection.new("Server=#{@connection_parameters[0]};Port=#{@connection_parameters[1]};User Id=#{@connection_parameters[5]};Password=#{@connection_parameters[6]};Database=#{@connection_parameters[4]};")
+          @connection = Npgsql::NpgsqlConnection.new("Server=#{@connection_parameters[0]};Port=#{@connection_parameters[1]};User Id=#{@connection_parameters[5]};Password=#{@connection_parameters[6]};Database=#{@connection_parameters[4]};SSL=#{@connection_parameters[7]}")
           @connection.open
           #PGconn.translate_results = false if PGconn.respond_to?(:translate_results=)
 
